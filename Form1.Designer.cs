@@ -218,7 +218,7 @@
             this.textUrl.Name = "textUrl";
             this.textUrl.Size = new System.Drawing.Size(715, 20);
             this.textUrl.TabIndex = 0;
-            this.textUrl.Text = "https://www.youtube.com/watch?v=YIgoFjO9Mg4";
+            this.textUrl.Text = "Ingrese url";
             // 
             // Nori
             // 
