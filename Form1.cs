@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
-using System.Threading;
-using System.Collections.Generic;
-using YoutubeExplode.Playlists;
-using YoutubeExplode.Videos;
 using YoutubeExplode.Common;
+using YoutubeExplode.Videos.Streams;
 namespace Nori_player
 {
     public partial class Nori : Form
@@ -22,9 +19,9 @@ namespace Nori_player
         {
             try
             {
-            var url = textUrl.Text;
+                var url = textUrl.Text;
 
-            
+
                 if (url.Contains("https://www.youtube.com/playlist?list="))
                 {
                     var playlist = await youtube.Playlists.GetAsync(url);
@@ -32,7 +29,7 @@ namespace Nori_player
                     textTitle.Text = playlist.Title;
                     labelchannel.Text = playlist.Author.ChannelTitle;
 
-                    var objectlsit =  await youtube.Playlists.GetVideosAsync(url);
+                    var objectlsit = await youtube.Playlists.GetVideosAsync(url);
                     LabelTotalMusic.Text = playlist.Count.ToString();
                     foreach (var video in objectlsit)
                     {
@@ -105,13 +102,14 @@ namespace Nori_player
                     TextFilePath.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
         }
-        private  void Guardar_Click(object sender, EventArgs e)
+        private void Guardar_Click(object sender, EventArgs e)
         {
             Thread hilo = new Thread(download);
             hilo.IsBackground = true;
             hilo.Start();
         }
-        public async void download() {
+        public async void download()
+        {
             try
             {
                 string url = textUrl.Text;
@@ -122,7 +120,8 @@ namespace Nori_player
                     var streamInfo = streamManifest.GetAudioOnlyStreams().Where(x => x.Bitrate.KiloBitsPerSecond < 150).OrderByDescending(x => x.Bitrate.KiloBitsPerSecond).FirstOrDefault();
                     await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{TextFilePath.Text}/{textTitle.Text}.mp3");
                 }
-                else {
+                else
+                {
                     var streamInfo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality();
                     await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{TextFilePath.Text}/{textTitle.Text}.{streamInfo.Container}");
                 }
